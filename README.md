@@ -3,7 +3,7 @@ An useful App for Taiwanese who is during conscription.
 對正在服兵役的台灣人來說實用的App
 1. 退伍日其計算
 2. 退伍倒數天數
-#Demo
+# Demo
 <div style="width:960px; margin:0 auto;">
 <img src="https://github.com/ylchen19/HateConscription/blob/master/Screenshot_20240211_161754.png" width=30% height=30%>
 <img src="https://github.com/ylchen19/HateConscription/blob/master/Screenshot_20240211_161850.png" width=30% height=30%>
