@@ -1,7 +1,7 @@
 # HateConscription
 An useful App for Taiwanese who is during conscription. 
 對正在服兵役的台灣人來說實用的App
-1. 退伍日其計算
+1. 退伍日期計算
 2. 退伍倒數天數
 # Demo
 <div style="width:960px; margin:0 auto;">
