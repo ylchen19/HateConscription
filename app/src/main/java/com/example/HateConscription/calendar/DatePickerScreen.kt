@@ -49,6 +49,7 @@ fun DatePickerScreen (
         snackbarHost = { SnackbarHost(snackbarHostState) },
         modifier = Modifier.padding(16.dp, 16.dp)
     ) { currentPadding ->
+
         Column (
             modifier = Modifier.padding(currentPadding),
             verticalArrangement = Arrangement.spacedBy(16.dp)
