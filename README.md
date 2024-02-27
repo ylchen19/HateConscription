@@ -5,10 +5,10 @@ An useful App for Taiwanese who is during conscription.
 2. 退伍倒數天數
 # Demo
 <div style="width:960px; margin:0 auto;">
-<img src="https://github.com/ylchen19/HateConscription/blob/master/Screenshot_20240211_161754.png" width=30% height=30%>
-<img src="https://github.com/ylchen19/HateConscription/blob/master/Screenshot_20240211_161850.png" width=30% height=30%>
-<img src="https://github.com/ylchen19/HateConscription/blob/master/Screenshot_20240211_161901.png" width=30% height=30%>
-<img src="https://github.com/ylchen19/HateConscription/blob/master/Screenshot_20240211_161959.png" width=30% height=30%>
+<img src="https://github.com/ylchen19/HateConscription/blob/master/Screenshot_20240227_220043.png" width=30% height=30%>
+<img src="https://github.com/ylchen19/HateConscription/blob/master/Screenshot_20240227_220115.png" width=30% height=30%>
+<img src="https://github.com/ylchen19/HateConscription/blob/master/Screenshot_20240227_220124.png" width=30% height=30%>
+<img src="https://github.com/ylchen19/HateConscription/blob/master/Screenshot_20240227_220132.png" width=30% height=30%>
 </div>
 
 # UI & Data State
