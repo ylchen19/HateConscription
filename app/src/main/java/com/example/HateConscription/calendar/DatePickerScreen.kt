@@ -33,12 +33,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.HateConscription.R
+import com.example.HateConscription.navigation.SharedViewModel
 import kotlinx.coroutines.launch
 
 @ExperimentalMaterial3Api
 @Composable
 fun DatePickerScreen (
-    dateNDayViewModel: DateNDaysViewModel = viewModel()
+    dateNDayViewModel: DateNDaysViewModel = viewModel(),
+    sharedViewModel: SharedViewModel
 ) {
 
     val dateUiState by dateNDayViewModel.uiState.collectAsStateWithLifecycle()
@@ -66,7 +68,10 @@ fun DatePickerScreen (
             )
             CustomDatePicker(
                 stringResource(id = R.string.Enlistment_date),
-                onInputDateChanged = { dateNDayViewModel.updateEnlistmentDay(it) },
+                onInputDateChanged = {
+                    dateNDayViewModel.updateEnlistmentDay(it)
+                    sharedViewModel.updateEDay(it)
+                },
                 isIllegalInput = dateUiState.isIllegalEnlistmentDate
             )
             DaysInputField(
@@ -75,9 +80,12 @@ fun DatePickerScreen (
             )
             if (dateUiState.show) {
                 showDaysContent(dateDetails = dateUiState.day2Leave, daysDetail = dateUiState.backHomeCountDown)
+                sharedViewModel.updateLDay(dateUiState.day2Leave)
             }
             OutlinedButton(
-                onClick = { dateNDayViewModel.onDateSubmit() },
+                onClick = {
+                    dateNDayViewModel.onDateSubmit()
+                },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = true
             ) {
@@ -86,7 +94,7 @@ fun DatePickerScreen (
                     fontSize = 16.sp
                 )
             }
-            if (dateUiState.show == true) {
+            if (dateUiState.error) {
                 scope.launch {
                     val result = snackbarHostState.showSnackbar(
                         "請填入所有空格",

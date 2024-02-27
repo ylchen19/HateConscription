@@ -9,5 +9,5 @@ data class DateNDaysUiState(
     val isIllegalBirthdayDate: Boolean = false,
     val isIllegalEnlistmentDate: Boolean = false,
     val show: Boolean = false,
-    val error: Boolean = false
+    val error: Boolean = false,
 )

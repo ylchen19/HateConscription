@@ -17,7 +17,7 @@ class DateNDaysViewModel: ViewModel() {
     private val _uiState = MutableStateFlow(DateNDaysUiState())
     val uiState: StateFlow<DateNDaysUiState> = _uiState.asStateFlow()
 
-    val dateRegex: String = "(([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})\\/(((0[13578]|1[02])\\/(0[1-9]|[12][0-9]|3[01]))|"+
+    private val dateRegex: String = "(([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})\\/(((0[13578]|1[02])\\/(0[1-9]|[12][0-9]|3[01]))|"+
             "((0[469]|11)\\/(0[1-9]|[12][0-9]|30))|(02\\/(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|"+
             "((0[48]|[2468][048]|[3579][26])00))\\/02\\/29)$"
 
@@ -30,17 +30,20 @@ class DateNDaysViewModel: ViewModel() {
                 currentState.copy(birthdaySelect = bDay)
             }
             isIllegalBirthdayInputState(false)
-        } else {
+        }  else {
             isIllegalBirthdayInputState(true)
         }
     }
 
     fun updateEnlistmentDay (eDay: String) {
-        if (Regex(dateRegex).matches(eDay)) {
+        if (Regex(dateRegex).matches(eDay) &&
+            (eDay.take(4).toInt() - _uiState.value.birthdaySelect.take(4).toInt()) > 18) {
             _uiState.update { currentState ->
                 currentState.copy(enlistmentDaySelect = eDay)
             }
             isIllegalEnlistmentDayInputState(false)
+        } else if ((eDay.take(4).toInt() - _uiState.value.birthdaySelect.take(4).toInt()) < 18) {
+            isIllegalEnlistmentDayInputState(true)
         } else {
             isIllegalEnlistmentDayInputState(true)
         }
@@ -101,9 +104,10 @@ class DateNDaysViewModel: ViewModel() {
         return ChronoUnit.DAYS.between(localDate, _lastDay)
     } // 計算還剩幾天
 
-    fun onDateSubmit ()  {
+    fun onDateSubmit () {
         if (_uiState.value.birthdaySelect != "" && _uiState.value.enlistmentDaySelect != ""
             &&_uiState.value.dDay != "") {
+            errorState(false)
             val lastDaysDate = calculateWhichDay2Leave(
                 _uiState.value.birthdaySelect,
                 _uiState.value.enlistmentDaySelect,
@@ -116,9 +120,7 @@ class DateNDaysViewModel: ViewModel() {
             showDetail(true)
         } else {
             showDetail(false)
-            if (!_uiState.value.error) {
-                errorState(true)
-            }
+            errorState(true)
         }
     }
 }

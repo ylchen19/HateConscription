@@ -16,9 +16,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
@@ -42,14 +42,14 @@ enum class Screens {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BottomNavigationBar () {
+fun BottomNavigationBar (sharedViewModel: SharedViewModel = viewModel()) {
     val navController = rememberNavController()
     Scaffold(
         bottomBar = {
             NavigationBar {
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentRoute = navBackStackEntry?.destination
-                var selectedItemIndex by rememberSaveable {
+                val selectedItemIndex by rememberSaveable {
                     mutableStateOf(0)
                 }
                 val items = listOf(
@@ -77,6 +77,7 @@ fun BottomNavigationBar () {
                                 launchSingleTop = true
                                 restoreState = true
                             }
+
                         },
                         icon = {
                             Icon(
@@ -98,12 +99,11 @@ fun BottomNavigationBar () {
             modifier = Modifier.padding(paddingValues)
         ) {
             composable(route = Screens.DatePickerScreen.name) {
-                DatePickerScreen()
+                DatePickerScreen(sharedViewModel = sharedViewModel)
             }
             composable(route = Screens.DrinkWaterScreen.name) {
-                DrinkWaterCardScreen()
+                DrinkWaterCardScreen(sharedViewModel = sharedViewModel)
             }
         }
     }
-
 }
