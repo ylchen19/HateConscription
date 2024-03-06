@@ -9,4 +9,6 @@
     <string name="show_less">show less</string>
     <string name="date_picker">Date Picker</string>
     <string name="drink_water">Drink Water</string>
+    <string name="save">儲存</string>
+    <string name="edit">編輯</string>
 </resources>

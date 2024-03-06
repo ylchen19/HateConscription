@@ -14,19 +14,21 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.HateConscription.calendar.DateNDaysViewModel
 import com.example.HateConscription.calendar.DatePickerScreen
 import com.example.HateConscription.drinkWaterTable.DrinkWaterCardScreen
+import com.example.HateConscription.drinkWaterTable.DrinkWaterViewModel
 
 data class BottomNavigationItem (
     val title: String,
@@ -42,7 +44,7 @@ enum class Screens {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BottomNavigationBar (sharedViewModel: SharedViewModel = viewModel()) {
+fun BottomNavigationBar (sharedViewModel: SharedViewModel = hiltViewModel()) {
     val navController = rememberNavController()
     Scaffold(
         bottomBar = {
@@ -50,7 +52,7 @@ fun BottomNavigationBar (sharedViewModel: SharedViewModel = viewModel()) {
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentRoute = navBackStackEntry?.destination
                 val selectedItemIndex by rememberSaveable {
-                    mutableStateOf(0)
+                    mutableIntStateOf(0)
                 }
                 val items = listOf(
                     BottomNavigationItem(
@@ -98,11 +100,17 @@ fun BottomNavigationBar (sharedViewModel: SharedViewModel = viewModel()) {
             startDestination = Screens.DatePickerScreen.name,
             modifier = Modifier.padding(paddingValues)
         ) {
-            composable(route = Screens.DatePickerScreen.name) {
-                DatePickerScreen(sharedViewModel = sharedViewModel)
+            composable(route = Screens.DatePickerScreen.name) {backStackEntry ->
+                DatePickerScreen(
+                    dateNDayViewModel = hiltViewModel<DateNDaysViewModel>(backStackEntry),
+                    sharedViewModel = sharedViewModel
+                )
             }
-            composable(route = Screens.DrinkWaterScreen.name) {
-                DrinkWaterCardScreen(sharedViewModel = sharedViewModel)
+            composable(route = Screens.DrinkWaterScreen.name) {backStackEntry ->
+                DrinkWaterCardScreen(
+                    drinkWaterViewModel = hiltViewModel<DrinkWaterViewModel>(backStackEntry),
+                    sharedViewModel = sharedViewModel
+                )
             }
         }
     }

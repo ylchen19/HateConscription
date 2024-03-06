@@ -41,13 +41,12 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.HateConscription.R
 import com.example.HateConscription.navigation.SharedViewModel
 
 @Composable
 fun DrinkWaterCardScreen (
-    drinkWaterViewModel: DrinkWaterViewModel = viewModel(),
+    drinkWaterViewModel: DrinkWaterViewModel,
     sharedViewModel: SharedViewModel
 ) {
     val sharedState by sharedViewModel.sharedState.collectAsStateWithLifecycle()
@@ -68,6 +67,7 @@ fun DrinkWaterCard (
     drinkWaterViewModel: DrinkWaterViewModel,
     date: String
 ) {
+    val dataState by drinkWaterViewModel.dataState.collectAsStateWithLifecycle()
     ElevatedCard (
         colors = CardDefaults.elevatedCardColors(
             containerColor = MaterialTheme.colorScheme.surfaceContainer
@@ -83,7 +83,12 @@ fun DrinkWaterCard (
             onWater3InputChanged = { drinkWaterViewModel.updateWater3(it) },
             onWater4InputChanged = { drinkWaterViewModel.updateWater4(it) },
             onTotalWaterInputChanged = { drinkWaterViewModel.updateWaterTotal(it)},
-            onClicked = { drinkWaterViewModel.updateTheForm()}
+            onClicked = {
+                drinkWaterViewModel.updateTheForm(date)
+                drinkWaterViewModel.saveDailyRecords(
+                    drinkWaterDataState = dataState
+                )
+            }
         )
     }
 }

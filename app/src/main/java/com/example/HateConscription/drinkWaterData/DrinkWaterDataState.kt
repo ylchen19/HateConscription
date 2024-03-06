@@ -1,6 +1,10 @@
-package com.example.HateConscription.drinkWaterTable
+package com.example.HateConscription.drinkWaterData
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+@Entity(tableName = "daily_records")
 data class DrinkWaterDataState(
+    @PrimaryKey
     val dateStamped: String = "",
     val bodyWeight: String = "",
     val bodyTemperature: String = "",

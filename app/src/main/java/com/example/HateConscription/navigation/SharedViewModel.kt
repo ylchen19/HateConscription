@@ -1,11 +1,14 @@
 package com.example.HateConscription.navigation
 
 import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import javax.inject.Inject
 
-class SharedViewModel: ViewModel() {
+@HiltViewModel
+class SharedViewModel @Inject constructor(): ViewModel() {
     private val _sharedState = MutableStateFlow(mutableMapOf<String, String>() )
     val sharedState: StateFlow<MutableMap<String, String>> = _sharedState.asStateFlow()
     fun updateEDay (enterDay: String) {

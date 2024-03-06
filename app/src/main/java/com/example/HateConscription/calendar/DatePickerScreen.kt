@@ -2,6 +2,7 @@ package com.example.HateConscription.calendar
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
@@ -17,10 +18,10 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -31,21 +32,19 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.HateConscription.R
 import com.example.HateConscription.navigation.SharedViewModel
-import kotlinx.coroutines.launch
 
 @ExperimentalMaterial3Api
 @Composable
 fun DatePickerScreen (
-    dateNDayViewModel: DateNDaysViewModel = viewModel(),
-    sharedViewModel: SharedViewModel
+    dateNDayViewModel: DateNDaysViewModel,
+    sharedViewModel: SharedViewModel,
 ) {
 
     val dateUiState by dateNDayViewModel.uiState.collectAsStateWithLifecycle()
+    val dataState by dateNDayViewModel.dataState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
-    val scope = rememberCoroutineScope()
 
     Scaffold (
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -61,41 +60,75 @@ fun DatePickerScreen (
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.displaySmall
             )
-            CustomDatePicker (
-                stringResource(id = R.string.birthday),
-                onInputDateChanged = { dateNDayViewModel.updateBirthdayInput(it) },
-                isIllegalInput = dateUiState.isIllegalBirthdayDate
-            )
-            CustomDatePicker(
-                stringResource(id = R.string.Enlistment_date),
-                onInputDateChanged = {
-                    dateNDayViewModel.updateEnlistmentDay(it)
-                    sharedViewModel.updateEDay(it)
-                },
-                isIllegalInput = dateUiState.isIllegalEnlistmentDate
-            )
+            if (!dataState.saved) {
+                CustomDatePicker (
+                    stringResource(id = R.string.birthday),
+                    onInputDateChanged = { dateNDayViewModel.updateBirthdayInput(it) },
+                    isIllegalInput = dateUiState.isIllegalBirthdayDate,
+                )
+                CustomDatePicker(
+                    stringResource(id = R.string.Enlistment_date),
+                    onInputDateChanged = {
+                        dateNDayViewModel.updateEnlistmentDay(it)
+                    },
+                    isIllegalInput = dateUiState.isIllegalEnlistmentDate
+                )
+            } else {
+                ShowSelectedDates(
+                    birthday = dataState.birthdaySelect,
+                    enlistmentDate = dataState.enlistmentDaySelect
+                )
+            }
+
             DaysInputField(
                 inputDate = dateNDayViewModel.dDay,
                 onInputDateChanged = { dateNDayViewModel.updateDDay(it) }
             )
-            if (dateUiState.show) {
-                showDaysContent(dateDetails = dateUiState.day2Leave, daysDetail = dateUiState.backHomeCountDown)
-                sharedViewModel.updateLDay(dateUiState.day2Leave)
-            }
-            OutlinedButton(
-                onClick = {
-                    dateNDayViewModel.onDateSubmit()
-                },
-                modifier = Modifier.fillMaxWidth(),
-                enabled = true
-            ) {
-                Text(
-                    text = stringResource(id = R.string.submit),
-                    fontSize = 16.sp
+            if (dataState.show) {
+                ShowDaysContent(
+                    dateDetails = dataState.day2Leave,
+                    daysDetail =  dateNDayViewModel.backHomeCountDown(
+                    dateNDayViewModel.today,
+                    dataState.day2Leave
+                    )
                 )
+                sharedViewModel.updateLDay(dataState.day2Leave)
+                sharedViewModel.updateEDay(dataState.enlistmentDaySelect)
             }
+            Row (
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End,
+            ){
+                OutlinedButton(
+                    onClick = {
+                        dateNDayViewModel.saved(false)
+                    },
+                    modifier = Modifier.padding(16.dp),
+                    enabled = true
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.edit),
+                        fontSize = 16.sp
+                    )
+                }
+                OutlinedButton(
+                    onClick = {
+                        dateNDayViewModel.onDateSubmit()
+                    },
+                    modifier = Modifier.padding(16.dp),
+                    enabled = true
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.save),
+                        fontSize = 16.sp
+                    )
+                }
+
+
+            }
+
             if (dateUiState.error) {
-                scope.launch {
+                LaunchedEffect(snackbarHostState) {
                     val result = snackbarHostState.showSnackbar(
                         "請填入所有空格",
                         actionLabel = "OK",
@@ -116,12 +149,30 @@ fun DatePickerScreen (
 }
 
 @Composable
-fun showDaysContent(
+fun ShowSelectedDates(
+    birthday: String,
+    enlistmentDate: String
+) {
+    Text(
+        text = "生日${birthday}",
+        fontWeight = FontWeight.Bold,
+        style = MaterialTheme.typography.displaySmall
+    )
+
+    Text(
+        text = "入伍日${enlistmentDate}",
+        fontWeight = FontWeight.Bold,
+        style = MaterialTheme.typography.displaySmall
+    )
+}
+
+@Composable
+fun ShowDaysContent(
     dateDetails: String,
     daysDetail: Long
 ) {
     Text(
-        text = "退伍日:${dateDetails}",
+        text = "退伍日${dateDetails}",
         fontWeight = FontWeight.Bold,
         style = MaterialTheme.typography.displaySmall
     )

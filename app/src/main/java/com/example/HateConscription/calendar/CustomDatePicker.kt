@@ -67,7 +67,7 @@ fun rememberDateInputState (input: String): DateInputState =
 fun CustomDatePicker (
     label: String,
     onInputDateChanged: (String) -> Unit,
-    dateInputState: DateInputState = rememberDateInputState(""),
+    dateInputState: DateInputState = rememberDateInputState( ""),
     isIllegalInput: Boolean
 ) {
     val isOpen = rememberSaveable { mutableStateOf(false) }
