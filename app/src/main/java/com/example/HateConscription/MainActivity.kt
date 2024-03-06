@@ -1,6 +1,5 @@
 package com.example.HateConscription
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -9,10 +8,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.HateConscription.calendar.DatePickerScreen
 import com.example.HateConscription.navigation.BottomNavigationBar
-import com.example.HateConscription.navigation.SharedViewModel
 import com.example.HateConscription.ui.theme.HateConscriptionTheme
 import dagger.hilt.android.AndroidEntryPoint
 
