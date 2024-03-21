@@ -6,10 +6,10 @@ An useful App for Taiwanese who is during conscription.
 3. 飲水小卡紀錄
 # Demo
 <div style="width:960px; margin:0 auto;">
-<img src="https://github.com/ylchen19/HateConscription/blob/master/Screenshot_20240227_220043.png" width=30% height=30%>
-<img src="https://github.com/ylchen19/HateConscription/blob/master/Screenshot_20240227_220115.png" width=30% height=30%>
-<img src="https://github.com/ylchen19/HateConscription/blob/master/Screenshot_20240227_220124.png" width=30% height=30%>
-<img src="https://github.com/ylchen19/HateConscription/blob/master/Screenshot_20240227_220132.png" width=30% height=30%>
+<img src="https://github.com/ylchen19/HateConscription/blob/master/Screenshot_20240321_202650.png" width=30% height=30%>
+<img src="https://github.com/ylchen19/HateConscription/blob/master/Screenshot_20240321_202718.png" width=30% height=30%>
+<img src="https://github.com/ylchen19/HateConscription/blob/master/Screenshot_20240321_202732.png" width=30% height=30%>
+<img src="https://github.com/ylchen19/HateConscription/blob/master/Screenshot_20240321_202743.png" width=30% height=30%>
 </div>
 
 # UI & Data State
