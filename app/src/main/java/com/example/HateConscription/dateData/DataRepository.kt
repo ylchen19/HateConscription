@@ -11,7 +11,6 @@ interface DataRepository {
         dDay: String,
         day2Leave: String,
         show: Boolean,
-        saved: Boolean
     )
 
     suspend fun getData(): Flow<DateNDaysDataState>

@@ -11,4 +11,5 @@
     <string name="drink_water">Drink Water</string>
     <string name="save">儲存</string>
     <string name="edit">編輯</string>
+    <string name="drink">每日飲水量</string>
 </resources>

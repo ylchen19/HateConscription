@@ -33,7 +33,6 @@ class DataStateRepository @Inject constructor (
         dDay: String,
         day2Leave: String,
         show: Boolean,
-        saved: Boolean
     ) {
         dataStateStore.updateData { value ->
             value.copy(
@@ -43,7 +42,6 @@ class DataStateRepository @Inject constructor (
                 dDay = dDay,
                 day2Leave = day2Leave,
                 show = show,
-                saved = saved
             )
         }
     }

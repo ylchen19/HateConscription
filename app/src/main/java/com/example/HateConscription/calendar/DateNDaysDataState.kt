@@ -10,5 +10,4 @@ data class DateNDaysDataState(
     val dDay: String = "0",
     val day2Leave: String = "",
     val show: Boolean = false,
-    val saved: Boolean = false
 )

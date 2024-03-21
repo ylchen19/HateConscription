@@ -21,14 +21,18 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.HateConscription.calendar.DateNDaysViewModel
 import com.example.HateConscription.calendar.DatePickerScreen
 import com.example.HateConscription.drinkWaterTable.DrinkWaterCardScreen
 import com.example.HateConscription.drinkWaterTable.DrinkWaterViewModel
+import com.example.HateConscription.drinkWaterTable.drinkWaterCard.CardContentScreen
+import com.example.HateConscription.drinkWaterTable.drinkWaterCard.CardContentViewModel
 
 data class BottomNavigationItem (
     val title: String,
@@ -39,7 +43,8 @@ data class BottomNavigationItem (
 
 enum class Screens {
     DatePickerScreen,
-    DrinkWaterScreen
+    DrinkWaterScreen,
+    CardEditScreen
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -100,17 +105,39 @@ fun BottomNavigationBar (sharedViewModel: SharedViewModel = hiltViewModel()) {
             startDestination = Screens.DatePickerScreen.name,
             modifier = Modifier.padding(paddingValues)
         ) {
-            composable(route = Screens.DatePickerScreen.name) {backStackEntry ->
+            composable(
+                route = Screens.DatePickerScreen.name
+            ) {backStackEntry ->
                 DatePickerScreen(
                     dateNDayViewModel = hiltViewModel<DateNDaysViewModel>(backStackEntry),
                     sharedViewModel = sharedViewModel
                 )
             }
-            composable(route = Screens.DrinkWaterScreen.name) {backStackEntry ->
+            composable(
+                route = Screens.DrinkWaterScreen.name
+            ) {backStackEntry ->
                 DrinkWaterCardScreen(
                     drinkWaterViewModel = hiltViewModel<DrinkWaterViewModel>(backStackEntry),
-                    sharedViewModel = sharedViewModel
+                    sharedViewModel = sharedViewModel,
+                    navigationToEdit = { date ->
+                        navController.navigate(route = Screens.CardEditScreen.name + "?date=$date")
+                    },
                 )
+            }
+            composable(
+                route = Screens.CardEditScreen.name + "?date={date}",
+                arguments = listOf(navArgument("date") {
+                    type = NavType.StringType
+                })
+            ) {backStackEntry ->
+                backStackEntry.arguments!!.getString("date")!!.let {
+                    CardContentScreen(
+                        navigateBack = { navController.popBackStack() },
+                        viewModel = hiltViewModel<CardContentViewModel>(backStackEntry),
+                        date = it
+                    )
+                }
+
             }
         }
     }

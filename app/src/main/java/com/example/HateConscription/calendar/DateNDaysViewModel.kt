@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.HateConscription.dateData.DataRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -36,7 +35,7 @@ class DateNDaysViewModel @Inject constructor(
             "((0[469]|11)\\/(0[1-9]|[12][0-9]|30))|(02\\/(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|"+
             "((0[48]|[2468][048]|[3579][26])00))\\/02\\/29)$"
 
-    private fun getDataState() = viewModelScope.launch(Dispatchers.IO) {
+    private fun getDataState() = viewModelScope.launch{
         dataStateRepository.getData().collect { values ->
             _dataState.update { state ->
                 state.copy(
@@ -46,10 +45,11 @@ class DateNDaysViewModel @Inject constructor(
                     dDay = values.dDay,
                     day2Leave = values.day2Leave,
                     show = values.show,
-                    saved = values.saved
                 )
             }
             dDay = values.dDay
+            birthdaySelected = values.birthdaySelect
+            enlistmentDaySelected = values.enlistmentDaySelect
         }
     }
 
@@ -60,8 +60,7 @@ class DateNDaysViewModel @Inject constructor(
         dDay: String,
         day2Leave: String,
         show: Boolean,
-        saved: Boolean
-    ) = viewModelScope.launch(Dispatchers.IO) {
+    ) = viewModelScope.launch{
         dataStateRepository.setData(
             id = id,
             birthdaySelect = birthdaySelect,
@@ -69,9 +68,14 @@ class DateNDaysViewModel @Inject constructor(
             dDay = dDay,
             day2Leave = day2Leave,
             show = show,
-            saved = saved
         )
     }
+
+    var birthdaySelected by mutableStateOf("")
+        private set
+
+    var enlistmentDaySelected by mutableStateOf("")
+        private set
 
     var dDay by mutableStateOf("")
         private set
@@ -131,12 +135,6 @@ class DateNDaysViewModel @Inject constructor(
         }
     }
 
-    fun saved (current: Boolean) {
-        _dataState.update { state ->
-            state.copy(saved = current)
-        }
-    }
-
     private val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd")
     val today: LocalDate = LocalDate.now()
 
@@ -179,7 +177,6 @@ class DateNDaysViewModel @Inject constructor(
             _uiState.update { value ->
                 value.copy(backHomeCountDown = dayCountDown)
             }
-            saved(true)
             saveData(
                 id = dataState.value.id,
                 birthdaySelect = dataState.value.birthdaySelect,
@@ -187,13 +184,11 @@ class DateNDaysViewModel @Inject constructor(
                 dDay = dataState.value.dDay,
                 day2Leave = dataState.value.day2Leave,
                 show = dataState.value.show,
-                saved = dataState.value.saved
             )
 
         } else {
             showDetail(false)
             errorState(true)
-            saved(false)
         }
     }
 }

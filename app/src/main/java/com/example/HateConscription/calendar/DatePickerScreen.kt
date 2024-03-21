@@ -60,26 +60,20 @@ fun DatePickerScreen (
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.displaySmall
             )
-            if (!dataState.saved) {
-                CustomDatePicker (
-                    stringResource(id = R.string.birthday),
-                    onInputDateChanged = { dateNDayViewModel.updateBirthdayInput(it) },
-                    isIllegalInput = dateUiState.isIllegalBirthdayDate,
-                )
-                CustomDatePicker(
-                    stringResource(id = R.string.Enlistment_date),
-                    onInputDateChanged = {
-                        dateNDayViewModel.updateEnlistmentDay(it)
-                    },
-                    isIllegalInput = dateUiState.isIllegalEnlistmentDate
-                )
-            } else {
-                ShowSelectedDates(
-                    birthday = dataState.birthdaySelect,
-                    enlistmentDate = dataState.enlistmentDaySelect
-                )
-            }
-
+            CustomDatePicker (
+                stringResource(id = R.string.birthday),
+                onInputDateChanged = { dateNDayViewModel.updateBirthdayInput(it) },
+                isIllegalInput = dateUiState.isIllegalBirthdayDate,
+                dateInputState = rememberDateInputState(input = dateNDayViewModel.birthdaySelected)
+            )
+            CustomDatePicker(
+                stringResource(id = R.string.Enlistment_date),
+                onInputDateChanged = {
+                    dateNDayViewModel.updateEnlistmentDay(it)
+                },
+                isIllegalInput = dateUiState.isIllegalEnlistmentDate,
+                dateInputState = rememberDateInputState(input = dateNDayViewModel.enlistmentDaySelected)
+            )
             DaysInputField(
                 inputDate = dateNDayViewModel.dDay,
                 onInputDateChanged = { dateNDayViewModel.updateDDay(it) }
@@ -99,18 +93,6 @@ fun DatePickerScreen (
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End,
             ){
-                OutlinedButton(
-                    onClick = {
-                        dateNDayViewModel.saved(false)
-                    },
-                    modifier = Modifier.padding(16.dp),
-                    enabled = true
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.edit),
-                        fontSize = 16.sp
-                    )
-                }
                 OutlinedButton(
                     onClick = {
                         dateNDayViewModel.onDateSubmit()
@@ -146,24 +128,6 @@ fun DatePickerScreen (
             }
         }
     }
-}
-
-@Composable
-fun ShowSelectedDates(
-    birthday: String,
-    enlistmentDate: String
-) {
-    Text(
-        text = "生日${birthday}",
-        fontWeight = FontWeight.Bold,
-        style = MaterialTheme.typography.displaySmall
-    )
-
-    Text(
-        text = "入伍日${enlistmentDate}",
-        fontWeight = FontWeight.Bold,
-        style = MaterialTheme.typography.displaySmall
-    )
 }
 
 @Composable
